@@ -7,6 +7,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.Objects;
+import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 
 /**
  * Add Customer class
@@ -42,13 +43,24 @@ public class AddCustomerPage extends ManagePage {
         return this;
     }
 
-    @Step("Проверка сообщения о создании клиента: Customer added successfully with customer id : , после проверки жмем ОК")
+    @Step("Проверка сообщения о создании клиента, после проверки жмем ОК")
     public AddCustomerPage checkMessageCreateCustomer(){
-        String expectedAlertMessage= driver.switchTo().alert().getText();
-        Assertions.assertTrue(expectedAlertMessage.contains("Customer added successfully with customer id :")
-                        , "Сообщение подтверждения создания клиента не корректно или отсутствует");
+        String actualAlertMessage= driver.switchTo().alert().getText();
+        Assertions.assertTrue(actualAlertMessage.contains("Customer added successfully with customer id :"),
+                "Сообщение подтверждения создания клиента не корректно или отсутствует");
         driver.switchTo().alert().accept();
         return this;
+    }
+
+    @Step("Проверка сообщения о создании клиента, после проверки жмем ОК. Для параметризованного теста")
+    public void checkMessageCreateCustomerParam(boolean condition) {
+        boolean actualAlertMessage= driver.switchTo().alert().getText().contains("Customer added successfully with customer id :");
+        if(actualAlertMessage != condition){
+            assertionFailure().message("Сообщение подтверждения создания клиента не корректно или отсутствует")
+                    .expected(true).actual(false).buildAndThrow();
+        }
+
+        driver.switchTo().alert().accept();
     }
 
     @Step("Проверка что одно из полей не заполнено")
