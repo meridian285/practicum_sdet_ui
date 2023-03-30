@@ -6,7 +6,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,17 +42,11 @@ public class CustomersPage extends ManagePage {
 
     @Step("Проверка что клиент найден")
     public void checkFindCustomers(String firstName, String lastName, String postCode){
-        //переводим список веб элементов в список строку
-        List<String> list = new ArrayList<>();
-        listCustomers.forEach(variable -> list.add(variable.getText()));
-        //Разбиваем список на подсписки
-        List<List<String>> sublist = new ArrayList<>();
-        for (int i = 0; i < list.size(); i += 3) {
-            sublist.add(list.subList(i, Math.min(i + 3, listCustomers.size())));
-            List<String> expected = Arrays.asList(firstName,lastName,postCode);//Данные полученные из генератора данных
-            if (sublist.get(i).equals(expected)){
-                Assertions.assertEquals(expected, sublist.get(i), "Ожидалось совпадение поиска клиента");
-            }
+        //цикл перебирает все полученные подсписки и сверяет с ожидаемым результатом
+        for (int i = 0; i < getListCustomers().size(); i++) {
+            List<String> expected = Arrays.asList(firstName,lastName,postCode); //Данные полученные из генератора данных
+                Assertions.assertEquals(expected, getListCustomers().get(i),
+                        "Ожидалось совпадение поиска клиента");
         }
     }
 
