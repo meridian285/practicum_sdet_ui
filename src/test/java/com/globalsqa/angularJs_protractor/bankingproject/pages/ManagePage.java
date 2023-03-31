@@ -34,4 +34,15 @@ public abstract class ManagePage extends BasePage {
         customersButton.click();
         return new CustomersPage();
     }
+
+    //Добавил клик по модальному окну в класс ManagePage чтобы можно было переиспользовать во всех классах
+    @Step("Нажатие кнопки на всплывающем окне")
+    public void clickAlertAccept(){
+        driver.switchTo().alert().accept();
+    }
+    //Добавил getText() модальномго окна в класс ManagePage чтобы можно было переиспользовать во всех классах
+    @Step("Извлекаем тест из модального окна")
+    public String getTextAlertMessage(){
+        return  driver.switchTo().alert().getText();
+    }
 }
