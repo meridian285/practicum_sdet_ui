@@ -15,13 +15,13 @@ import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 
 public class AddCustomerPage extends ManagePage {
     //Локатор поля ввода First Name
-    @FindBy(xpath = "//*[@placeholder='First Name']")
+    @FindBy(xpath = "//input[@placeholder='First Name']")
     private WebElement firstNameField;
     //Локатор поля ввода Last Name
-    @FindBy(xpath = "//*[@placeholder='Last Name']")
+    @FindBy(xpath = "//input[@placeholder='Last Name']")
     private WebElement lastNameField;
     //Локатор поля ввода PostCode
-    @FindBy(xpath = "//*[@placeholder='Post Code']")
+    @FindBy(xpath = "//input[@placeholder='Post Code']")
     private WebElement postCodeField;
     //Локатор кнопки Add Customer
     @FindBy(xpath = "//button[text()='Add Customer']")
@@ -51,6 +51,13 @@ public class AddCustomerPage extends ManagePage {
         driver.switchTo().alert().accept();
         return this;
     }
+    @Step("Проверка сообщения о создании клиента, после проверки жмем ОК")
+    public void checkMessageCreateDuplicateCustomer(){
+        String actualAlertMessage= driver.switchTo().alert().getText();
+        Assertions.assertTrue(actualAlertMessage.contains("Please check the details. Customer may be duplicate."),
+                "Ожидалось сообщение об ошибке, нельзя создать дубликат");
+        driver.switchTo().alert().accept();
+    }
 
     @Step("Проверка сообщения о создании клиента, после проверки жмем ОК. Для параметризованного теста")
     public void checkMessageCreateCustomerParam(boolean condition) {
@@ -59,10 +66,8 @@ public class AddCustomerPage extends ManagePage {
             assertionFailure().message("Сообщение подтверждения создания клиента не корректно или отсутствует")
                     .expected(true).actual(false).buildAndThrow();
         }
-
         driver.switchTo().alert().accept();
     }
-
     @Step("Проверка что одно из полей не заполнено")
     public void checkingThatFieldsNotFilled(){
         boolean check = Objects.requireNonNull(formFields.getAttribute("class"))
