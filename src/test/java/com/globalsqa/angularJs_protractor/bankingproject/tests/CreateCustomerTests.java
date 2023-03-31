@@ -6,11 +6,14 @@ import com.globalsqa.angularJs_protractor.bankingproject.generator.DataGenerator
 import com.globalsqa.angularJs_protractor.bankingproject.pages.AddCustomerPage;
 import com.globalsqa.angularJs_protractor.bankingproject.pages.MainPage;
 import com.globalsqa.angularJs_protractor.bankingproject.pages.ManagePage;import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.html5.WebStorage;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Класс для тестов создания клиентов
@@ -19,6 +22,7 @@ import org.openqa.selenium.html5.WebStorage;
 public class CreateCustomerTests extends BaseTest {
 
     Customer customer = DataGenerator.getCustomerFaker();
+    AddCustomerPage addCustomerPage = new AddCustomerPage();
     MainPage mainPage = new MainPage();
     ManagePage managePage = new ManagePage() {
         @Override
@@ -38,22 +42,28 @@ public class CreateCustomerTests extends BaseTest {
     public void createCustomerValidCredentials(){
         mainPage.clickBankManagerLoginButton();
         managePage.clickAddCustomerButton()
-                .createCustomer(customer.getFirstName(), customer.getLastName(), customer.getPostCode())
-                .checkMessageCreateCustomer();
+                .createCustomer(customer.getFirstName(), customer.getLastName(), customer.getPostCode());
+        assertTrue(managePage.getTextAlertMessage().contains("Customer added successfully with customer id :"),
+                "Сообщение подтверждения создания клиента не корректно или отсутствует");
+        managePage.clickAlertAccept();
     }
 
     @Test
     @DisplayName("Тест на повторное создание существующего клиента")
-    public void createIdenticalCustomer(){
+    public void createDuplicateCustomer(){
         String firstName = customer.getFirstName();
         String lastName = customer.getLastName();
         String postCode = customer.getPostCode();
         mainPage.clickBankManagerLoginButton();
         managePage.clickAddCustomerButton()
-                .createCustomer(firstName, lastName, postCode)
-                .checkMessageCreateCustomer()
-                .createCustomer(firstName, lastName, postCode)
-                .checkMessageCreateDuplicateCustomer();
+                .createCustomer(firstName, lastName, postCode);
+        assertTrue(managePage.getTextAlertMessage().contains("Customer added successfully with customer id :"),
+                "Сообщение подтверждения создания клиента не корректно или отсутствует");
+        managePage.clickAlertAccept();
+        addCustomerPage.createCustomer(firstName, lastName, postCode);
+        Assertions.assertFalse(managePage.getTextAlertMessage().contains("Customer added successfully with customer id :"),
+                "Сообщение подтверждения создания клиента не корректно или отсутствует");
+        managePage.clickAlertAccept();
     }
 
     @Test
@@ -61,8 +71,9 @@ public class CreateCustomerTests extends BaseTest {
     public void createCustomerWithoutFirstName() {
         mainPage.clickBankManagerLoginButton();
         managePage.clickAddCustomerButton()
-                .createCustomer("", customer.getLastName(), customer.getPostCode())
-                .checkingThatFieldsNotFilled();
+                .createCustomer("", customer.getLastName(), customer.getPostCode());
+        Assertions.assertTrue(addCustomerPage.checkingThatFieldsNotFilled(),
+                "Свойство класса локатора не совпадает с ожидаемым");
     }
 
     @Test
@@ -70,8 +81,9 @@ public class CreateCustomerTests extends BaseTest {
     public void createCustomerWithoutLastName() {
         mainPage.clickBankManagerLoginButton();
         managePage.clickAddCustomerButton()
-                .createCustomer(customer.getFirstName(), "", customer.getPostCode())
-                .checkingThatFieldsNotFilled();
+                .createCustomer(customer.getFirstName(), "", customer.getPostCode());
+        Assertions.assertTrue(addCustomerPage.checkingThatFieldsNotFilled(),
+                "Свойство класса локатора не совпадает с ожидаемым");
     }
 
     @Test
@@ -79,8 +91,9 @@ public class CreateCustomerTests extends BaseTest {
     public void createCustomerWithoutPostCode(){
         mainPage.clickBankManagerLoginButton();
         managePage.clickAddCustomerButton()
-                .createCustomer(customer.getFirstName(), customer.getLastName(), "")
-                .checkingThatFieldsNotFilled();
+                .createCustomer(customer.getFirstName(), customer.getLastName(), "");
+        Assertions.assertTrue(addCustomerPage.checkingThatFieldsNotFilled(),
+                "Свойство класса локатора не совпадает с ожидаемым");
     }
 
     @ParameterizedTest
@@ -89,7 +102,9 @@ public class CreateCustomerTests extends BaseTest {
     public void createCustomerParamTest(String firstName, String lastName, String postCode, boolean check) {
         mainPage.clickBankManagerLoginButton();
         managePage.clickAddCustomerButton()
-                .createCustomer(firstName, lastName, postCode)
-                .checkMessageCreateCustomerParam(check);
+                .createCustomer(firstName, lastName, postCode);
+        Assertions.assertEquals(check,addCustomerPage.checkMessageCreateCustomerParam(),
+                        "Сообщение подтверждения создания клиента не корректно или отсутствует");
+        managePage.clickAlertAccept();
     }
 }
