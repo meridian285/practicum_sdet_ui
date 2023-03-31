@@ -35,9 +35,8 @@ public class CustomersPage extends ManagePage {
     }
 
     @Step("Клик по заголовку столбца First Name, для сортировки")
-    public CustomersPage clickOnTitleFirstName(){
+    public void clickOnTitleFirstName(){
         titleFirstName.click();
-        return this;
     }
 
     @Step("Проверка что клиент найден")
@@ -51,13 +50,17 @@ public class CustomersPage extends ManagePage {
     }
 
     @Step("Проверка сортировки таблицы по первому столбцу First Name")
-    public void checkSortingTable(){
+    public List<String> listSortedBySite(){
         List<String> actual = new ArrayList<>();
         for (List<String> strings : getListCustomers()) {
             actual.add(strings.get(0));
         }
-        List<String> expected = actual.stream().sorted(Collections.reverseOrder()).collect(Collectors.toList());
-        Assertions.assertEquals(expected, actual, "Ожидалось совпадение списков");
+        return actual;
+    }
+
+    @Step("Список expected для проверки сортировки по столбцу")
+    public List<String> sortingListInDescending(){
+        return listSortedBySite().stream().sorted(Collections.reverseOrder()).collect(Collectors.toList());
     }
 
     //Метод получения списков всех клиентов
