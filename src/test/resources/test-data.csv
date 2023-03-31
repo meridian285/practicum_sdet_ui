@@ -1,9 +1,7 @@
 Файл для параметризации теста Создания клиента.
-Oliver|Atcheson|E89879|true
-Jack|Kennett|E98000|true
-Harry|Kirk|Y99808|true
-Jacob|Backer|G98798|true
-Charley|Lawman|B75765|true
+Oliver123456|Atcheson|E89879|false
+%?*:%;№(|Atcheson|E89879|false
+Charley|Lawman|&&#)*|false
 Thomas|Larkins|E65767|true
 George|Bargeman|E76576|true
 Oscar|Bargeman|E763452|true
