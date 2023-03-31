@@ -6,7 +6,6 @@ import com.globalsqa.angularJs_protractor.bankingproject.generator.DataGenerator
 import com.globalsqa.angularJs_protractor.bankingproject.pages.AddCustomerPage;
 import com.globalsqa.angularJs_protractor.bankingproject.pages.MainPage;
 import com.globalsqa.angularJs_protractor.bankingproject.pages.ManagePage;import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,7 +18,7 @@ import org.openqa.selenium.html5.WebStorage;
 
 public class CreateCustomerTests extends BaseTest {
 
-    Customer customer = DataGenerator.getCustomerFaker();;
+    Customer customer = DataGenerator.getCustomerFaker();
     MainPage mainPage = new MainPage();
     ManagePage managePage = new ManagePage() {
         @Override
@@ -41,6 +40,20 @@ public class CreateCustomerTests extends BaseTest {
         managePage.clickAddCustomerButton()
                 .createCustomer(customer.getFirstName(), customer.getLastName(), customer.getPostCode())
                 .checkMessageCreateCustomer();
+    }
+
+    @Test
+    @DisplayName("Тест на повторное создание существующего клиента")
+    public void createIdenticalCustomer(){
+        String firstName = customer.getFirstName();
+        String lastName = customer.getLastName();
+        String postCode = customer.getPostCode();
+        mainPage.clickBankManagerLoginButton();
+        managePage.clickAddCustomerButton()
+                .createCustomer(firstName, lastName, postCode)
+                .checkMessageCreateCustomer()
+                .createCustomer(firstName, lastName, postCode)
+                .checkMessageCreateDuplicateCustomer();
     }
 
     @Test
