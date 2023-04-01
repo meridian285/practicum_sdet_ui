@@ -3,13 +3,8 @@ package com.globalsqa.angularJs_protractor.bankingproject.tests;
 import com.globalsqa.angularJs_protractor.bankingproject.config.BaseTest;
 import com.globalsqa.angularJs_protractor.bankingproject.generator.Customer;
 import com.globalsqa.angularJs_protractor.bankingproject.generator.DataGenerator;
-import com.globalsqa.angularJs_protractor.bankingproject.pages.AddCustomerPage;
-import com.globalsqa.angularJs_protractor.bankingproject.pages.CustomersPage;
-import com.globalsqa.angularJs_protractor.bankingproject.pages.MainPage;
-import com.globalsqa.angularJs_protractor.bankingproject.pages.ManagePage;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.globalsqa.angularJs_protractor.bankingproject.pages.*;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -41,7 +36,7 @@ public class CustomersTests extends BaseTest {
                 .createCustomer(firstName, lastName, postCode);
         assertTrue(managePage.getTextAlertMessage().contains("Customer added successfully with customer id :"),
                 "Сообщение подтверждения создания клиента не корректно или отсутствует");
-        managePage.clickAlertAccept();
+        addCustomerPage.clickAlertAccept();
         addCustomerPage.clickCustomersButton()
                 .findText(firstName)
                 .checkFindCustomers(firstName, lastName, postCode);
