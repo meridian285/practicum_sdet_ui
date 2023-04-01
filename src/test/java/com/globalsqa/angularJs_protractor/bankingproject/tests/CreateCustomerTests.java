@@ -32,7 +32,7 @@ public class CreateCustomerTests extends BaseTest {
     };
 
     @AfterEach
-    public void clearCash(){
+    public void clearCash() {
         ((WebStorage) driver).getLocalStorage().clear();
         ((WebStorage) driver).getSessionStorage().clear();
     }
@@ -59,7 +59,7 @@ public class CreateCustomerTests extends BaseTest {
                 .createCustomer(firstName, lastName, postCode);
         assertTrue(managePage.getTextAlertMessage().contains("Customer added successfully with customer id :"),
                 "Сообщение подтверждения создания клиента не корректно или отсутствует");
-        managePage.clickAlertAccept();
+        addCustomerPage.clickAlertAccept();
         addCustomerPage.createCustomer(firstName, lastName, postCode);
         Assertions.assertFalse(managePage.getTextAlertMessage().contains("Customer added successfully with customer id :"),
                 "Сообщение подтверждения создания клиента не корректно или отсутствует");
@@ -99,12 +99,13 @@ public class CreateCustomerTests extends BaseTest {
     @ParameterizedTest
     @DisplayName("Параметризованный тест на создание клиента")
     @CsvFileSource(resources = "/test-data.csv", delimiter = '|', numLinesToSkip = 1)
-    public void createCustomerParamTest(String firstName, String lastName, String postCode, boolean check) {
+    public void createCustomerParamTest(String firstName, String lastName, String postCode, boolean check) throws InterruptedException {
         mainPage.clickBankManagerLoginButton();
         managePage.clickAddCustomerButton()
                 .createCustomer(firstName, lastName, postCode);
         Assertions.assertEquals(check,addCustomerPage.checkMessageCreateCustomerParam(),
                         "Сообщение подтверждения создания клиента не корректно или отсутствует");
-        managePage.clickAlertAccept();
+        addCustomerPage.clickAlertAccept();
+        managePage.clickCustomersButton().clickDeleteButton();
     }
 }
