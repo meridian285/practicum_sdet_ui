@@ -98,12 +98,14 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
                 <configuration>
-<!--                    <properties>-->
-<!--                        <configurationParameters>-->
-<!--                            junit.jupiter.execution.parallel.enabled=true-->
-<!--                            junit.jupiter.execution.parallel.mode.default=concurrent-->
-<!--                        </configurationParameters>-->
-<!--                    </properties>-->
+                    <properties>
+                        <configurationParameters>
+                            junit.jupiter.execution.parallel.enabled=true
+                            junit.jupiter.execution.parallel.mode.default=concurrent
+                            junit.jupiter.execution.parallel.config.strategy=fixed
+                            junit.jupiter.execution.parallel.config.fixed=parallelism=2
+                        </configurationParameters>
+                    </properties>
                     <argLine>
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
