@@ -2,6 +2,7 @@ package com.globalsqa.angularJs_protractor.bankingproject.pages;
 
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -23,6 +24,9 @@ public class CustomersPage extends ManagePage {
     //Локатор заголовка столбца First Name
     @FindBy(xpath = "//a[@ng-click=\"sortType = 'fName'; sortReverse = !sortReverse\"]")
     private WebElement titleFirstName;
+
+    private final By deleteButtonList = By.xpath("//button[text()='Delete']");
+    private final By deleteButton = By.xpath("//button[text()='Delete']");
 
     public CustomersPage(){
         PageFactory.initElements(driver, this);
@@ -74,5 +78,13 @@ public class CustomersPage extends ManagePage {
             sublist.add(list.subList(i, Math.min(i + 3, listCustomers.size())));
         }
         return sublist;
+    }
+
+    @Step("Метод Клик по кнопке Удалить")
+    public void clickDeleteButton() {
+        List<WebElement> deleteBL = driver.findElements(deleteButtonList);
+        for (int i = 0; i < deleteBL.size(); i++) {
+            driver.findElement(deleteButton).click();
+        }
     }
 }
